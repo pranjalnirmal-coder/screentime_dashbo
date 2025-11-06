@@ -38,8 +38,7 @@ filtered_df = filter_data(df, gender=selected_genders, age_range=selected_age, s
 
 # --- Line Plot: Age vs Stress Level ---
 if 'Age' in filtered_df.columns and 'StressLevel' in filtered_df.columns:
-    st.subheader("📈 Line Plot: Age vs Stress Level (0–10)")
-    st.caption("Shows how stress levels vary across different age groups.")
+    st.subheader("Line Plot: Age vs Stress Level (0–10)")
     fig1 = px.line(
         filtered_df.sort_values("Age"),
         x="Age",
@@ -51,8 +50,7 @@ if 'Age' in filtered_df.columns and 'StressLevel' in filtered_df.columns:
 
 # --- Bar Chart: Occupation vs Stress Level ---
 if 'Occupation' in filtered_df.columns and 'StressLevel' in filtered_df.columns:
-    st.subheader("🏢 Bar Chart: Average Stress Level by Occupation")
-    st.caption("Compares average stress levels for each occupation group.")
+    st.subheader("Bar Chart: Average Stress Level by Occupation")
     bar_df = filtered_df.groupby('Occupation')['StressLevel'].mean().reset_index()
     fig2 = px.bar(
         bar_df,
@@ -67,8 +65,7 @@ if 'Occupation' in filtered_df.columns and 'StressLevel' in filtered_df.columns:
 
 # --- Box Plot: Stress Level by Work Mode ---
 if 'WorkMode' in filtered_df.columns and 'StressLevel' in filtered_df.columns:
-    st.subheader("💼 Box Plot: Stress Level Distribution by Work Mode")
-    st.caption("Visualizes how stress levels differ among various work modes.")
+    st.subheader("Box Plot: Stress Level Distribution by Work Mode")
     fig3 = px.box(
         filtered_df,
         x='WorkMode',
@@ -81,8 +78,7 @@ if 'WorkMode' in filtered_df.columns and 'StressLevel' in filtered_df.columns:
 
 # --- Scatter Plot: Screen Time vs Mental Wellness ---
 if 'ScreenTime' in filtered_df.columns and 'MentalWellness' in filtered_df.columns:
-    st.subheader("📱 Scatter Plot: Screen Time vs Mental Wellness")
-    st.caption("Shows how screen time impacts mental wellness scores.")
+    st.subheader("Scatter Plot: Screen Time vs Mental Wellness")
     fig4 = px.scatter(
         filtered_df,
         x='ScreenTime',
@@ -96,8 +92,7 @@ if 'ScreenTime' in filtered_df.columns and 'MentalWellness' in filtered_df.colum
 
 # --- Histogram: Sleep Hours ---
 if 'SleepHours' in filtered_df.columns:
-    st.subheader("😴 Histogram: Distribution of Sleep Hours")
-    st.caption("Shows how sleep hours are distributed among respondents.")
+    st.subheader("Histogram: Distribution of Sleep Hours")
     fig5 = px.histogram(
         filtered_df,
         x='SleepHours',
@@ -109,4 +104,5 @@ if 'SleepHours' in filtered_df.columns:
     st.plotly_chart(fig5, use_container_width=True)
 
 st.success("✅ All 5 visualizations loaded successfully!")
+
 
