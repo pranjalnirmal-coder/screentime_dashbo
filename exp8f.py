@@ -1,58 +1,52 @@
-# exp8b_frontend.py
-import streamlit as st
-from exp8b import (
-    load_data, filter_data, get_summary_stats,
-    graph_screen_vs_wellness, graph_sleep_vs_wellness,
-    graph_avg_wellness_by_gender, graph_stress_vs_wellness,
-    graph_exercise_vs_wellness
-)
+"""Frontend Flask app: exp8f.py
+- Serves a simple page that displays the generated plots from exp8_plots.
+Run: python exp8f.py
+"""
+import os
+from flask import Flask, send_from_directory, render_template_string
 
-# ---------------- Page Config ----------------
-st.set_page_config(page_title="🧠 Screen Time & Mental Wellness Dashboard", layout="wide")
+app = Flask(__name__)
+PLOTS_DIR = os.path.join(os.path.dirname(__file__), "exp8_plots")
 
-# ---------------- Title ----------------
-st.title("📱 Screen Time vs Mental Wellness Insights")
-st.markdown("Explore how lifestyle factors like screen time, sleep, exercise, and stress impact mental wellness.")
+TEMPLATE = """
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Exp8 Plots</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 30px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+    .card { padding: 10px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    img { width: 100%; height: auto; border-radius: 6px; }
+    h2 { font-size: 18px; margin: 8px 0; }
+  </style>
+</head>
+<body>
+  <h1>Generated Plots (Exp8)</h1>
+  <div class="grid">
+  {% for p in plots %}
+    <div class="card">
+      <h2>{{ p }}</h2>
+      <img src="/plots/{{ p }}" alt="{{ p }}">
+      <p><a href="/plots/{{ p }}" download>Download</a></p>
+    </div>
+  {% endfor %}
+  </div>
+</body>
+</html>
+"""
 
-# ---------------- Load Dataset ----------------
-df = load_data()
+@app.route("/plots/<path:filename>")
+def serve_plot(filename):
+    return send_from_directory(PLOTS_DIR, filename)
 
-# ---------------- Sidebar Filters ----------------
-st.sidebar.header("🔍 Filters")
+@app.route("/")
+def index():
+    if not os.path.isdir(PLOTS_DIR):
+        return "<p>No plots found. Run the backend script to generate them.</p>"
+    plots = [f for f in os.listdir(PLOTS_DIR) if f.lower().endswith(('.png','.jpg'))]
+    return render_template_string(TEMPLATE, plots=plots)
 
-gender_options = st.sidebar.multiselect(
-    "Select Gender",
-    options=df["gender"].unique(),
-    default=list(df["gender"].unique())
-)
-
-age_min, age_max = int(df["age"].min()), int(df["age"].max())
-age_range = st.sidebar.slider("Select Age Range", age_min, age_max, (age_min, age_max))
-
-screen_min, screen_max = int(df["screen_time_hours"].min()), int(df["screen_time_hours"].max())
-screen_range = st.sidebar.slider("Select Screen Time Range (hours)", screen_min, screen_max, (screen_min, screen_max))
-
-# ---------------- Apply Filters ----------------
-filtered_df = filter_data(df, genders=gender_options, age_range=age_range, screen_time_range=screen_range)
-
-# ---------------- Key Insights ----------------
-st.subheader("📊 Key Insights")
-stats = get_summary_stats(filtered_df)
-
-col1, col2, col3 = st.columns(3)
-col1.metric("Avg Screen Time (hrs)", stats["Avg Screen Time"])
-col2.metric("Avg Mental Wellness", stats["Avg Mental Wellness Score"])
-col3.metric("Avg Sleep Hours", stats["Avg Sleep Hours"])
-
-st.markdown("---")
-
-# ---------------- 5 Graphs ----------------
-st.subheader("📈 Visual Insights")
-
-st.plotly_chart(graph_screen_vs_wellness(filtered_df), use_container_width=True)
-st.plotly_chart(graph_sleep_vs_wellness(filtered_df), use_container_width=True)
-st.plotly_chart(graph_avg_wellness_by_gender(filtered_df), use_container_width=True)
-st.plotly_chart(graph_stress_vs_wellness(filtered_df), use_container_width=True)
-st.plotly_chart(graph_exercise_vs_wellness(filtered_df), use_container_width=True)
-
-
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8080)
