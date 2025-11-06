@@ -61,3 +61,4 @@ avg_wellness = filtered_df.groupby("Gender")["Mental Wellness Score"].mean().res
 fig3 = px.bar(avg_wellness, x="Gender", y="Mental Wellness Score", color="Gender",
               title="Average Wellness by Gender")
 st.plotly_chart(fig3, use_container_width=True)
+
