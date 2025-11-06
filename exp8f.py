@@ -1,3 +1,16 @@
+st.markdown("""
+    <style>
+    .chart-card {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
+        margin-bottom: 40px;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+
 import streamlit as st
 import plotly.express as px
 from exp8b import load_data, filter_data
@@ -104,5 +117,6 @@ if 'SleepHours' in filtered_df.columns:
     st.plotly_chart(fig5, use_container_width=True)
 
 st.success("✅ All 5 visualizations loaded successfully!")
+
 
 
