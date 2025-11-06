@@ -3,8 +3,8 @@ import plotly.express as px
 from exp8b import load_data, filter_data
 
 st.set_page_config(
-    page_title="📊 Screen Time & Stress Dashboard",
-    page_icon="🧠",
+    page_title="Screen Time & Stress Dashboard",
+    page_icon="",
     layout="wide",
 )
 
@@ -36,7 +36,7 @@ else:
 
 filtered_df = filter_data(df, gender=selected_genders, age_range=selected_age, screen_range=selected_screen)
 
-# --- 1️⃣ Line Plot: Age vs Stress Level ---
+# --- Line Plot: Age vs Stress Level ---
 if 'Age' in filtered_df.columns and 'StressLevel' in filtered_df.columns:
     st.subheader("📈 Line Plot: Age vs Stress Level (0–10)")
     st.caption("Shows how stress levels vary across different age groups.")
@@ -49,7 +49,7 @@ if 'Age' in filtered_df.columns and 'StressLevel' in filtered_df.columns:
     )
     st.plotly_chart(fig1, use_container_width=True)
 
-# --- 2️⃣ Bar Chart: Occupation vs Stress Level ---
+# --- Bar Chart: Occupation vs Stress Level ---
 if 'Occupation' in filtered_df.columns and 'StressLevel' in filtered_df.columns:
     st.subheader("🏢 Bar Chart: Average Stress Level by Occupation")
     st.caption("Compares average stress levels for each occupation group.")
@@ -65,7 +65,7 @@ if 'Occupation' in filtered_df.columns and 'StressLevel' in filtered_df.columns:
     fig2.update_layout(xaxis_title="Occupation", yaxis_title="Average Stress Level (0–10)")
     st.plotly_chart(fig2, use_container_width=True)
 
-# --- 3️⃣ Box Plot: Stress Level by Work Mode ---
+# --- Box Plot: Stress Level by Work Mode ---
 if 'WorkMode' in filtered_df.columns and 'StressLevel' in filtered_df.columns:
     st.subheader("💼 Box Plot: Stress Level Distribution by Work Mode")
     st.caption("Visualizes how stress levels differ among various work modes.")
@@ -79,7 +79,7 @@ if 'WorkMode' in filtered_df.columns and 'StressLevel' in filtered_df.columns:
     fig3.update_layout(xaxis_title="Work Mode", yaxis_title="Stress Level (0–10)")
     st.plotly_chart(fig3, use_container_width=True)
 
-# --- 4️⃣ Scatter Plot: Screen Time vs Mental Wellness ---
+# --- Scatter Plot: Screen Time vs Mental Wellness ---
 if 'ScreenTime' in filtered_df.columns and 'MentalWellness' in filtered_df.columns:
     st.subheader("📱 Scatter Plot: Screen Time vs Mental Wellness")
     st.caption("Shows how screen time impacts mental wellness scores.")
@@ -94,7 +94,7 @@ if 'ScreenTime' in filtered_df.columns and 'MentalWellness' in filtered_df.colum
     fig4.update_layout(xaxis_title="Screen Time (hours per day)", yaxis_title="Mental Wellness Index (0–100)")
     st.plotly_chart(fig4, use_container_width=True)
 
-# --- 5️⃣ Histogram: Sleep Hours ---
+# --- Histogram: Sleep Hours ---
 if 'SleepHours' in filtered_df.columns:
     st.subheader("😴 Histogram: Distribution of Sleep Hours")
     st.caption("Shows how sleep hours are distributed among respondents.")
@@ -109,3 +109,4 @@ if 'SleepHours' in filtered_df.columns:
     st.plotly_chart(fig5, use_container_width=True)
 
 st.success("✅ All 5 visualizations loaded successfully!")
+
