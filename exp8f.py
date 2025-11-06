@@ -1,13 +1,13 @@
 # exp8b_frontend.py
 import streamlit as st
 import plotly.express as px
-from exp8b_backend import load_data, filter_data, get_summary_stats
+from exp8b import load_data, filter_data, get_summary_stats
 
 # Page Config
 st.set_page_config(page_title="🧠 Screen Time & Mental Wellness Dashboard", layout="wide")
 
 # Title and Description
-st.title("📱 Screen Time vs Mental Wellness Insights")
+st.title("Screen Time vs Mental Wellness Insights")
 st.markdown("Analyze how screen time, sleep, and lifestyle factors affect mental wellness scores.")
 
 # Load Dataset
@@ -43,22 +43,23 @@ col3.metric("Avg Sleep Hours", stats["Avg Sleep Hours"])
 st.markdown("---")
 
 # ---------------- Graph 1: Screen Time vs Wellness ----------------
-st.subheader("📱 Screen Time vs Mental Wellness")
+st.subheader("Screen Time vs Mental Wellness")
 fig1 = px.scatter(filtered_df, x="Screen Time (hours)", y="Mental Wellness Score",
                   color="Gender", size="Sleep Hours",
                   title="Screen Time vs Mental Wellness")
 st.plotly_chart(fig1, use_container_width=True)
 
 # ---------------- Graph 2: Sleep vs Wellness ----------------
-st.subheader("😴 Sleep Hours vs Mental Wellness")
+st.subheader("Sleep Hours vs Mental Wellness")
 fig2 = px.line(filtered_df, x="Sleep Hours", y="Mental Wellness Score",
                color="Gender", markers=True, title="Sleep vs Wellness")
 st.plotly_chart(fig2, use_container_width=True)
 
 # ---------------- Graph 3: Average Wellness by Gender ----------------
-st.subheader("⚧ Average Mental Wellness by Gender")
+st.subheader("Average Mental Wellness by Gender")
 avg_wellness = filtered_df.groupby("Gender")["Mental Wellness Score"].mean().reset_index()
 fig3 = px.bar(avg_wellness, x="Gender", y="Mental Wellness Score", color="Gender",
               title="Average Wellness by Gender")
 st.plotly_chart(fig3, use_container_width=True)
+
 
