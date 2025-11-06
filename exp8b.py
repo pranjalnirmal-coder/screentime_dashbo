@@ -1,47 +1,36 @@
+# exp8b_backend.py
 import pandas as pd
 
+# Function to load dataset
 def load_data(path="ScreevsmentalH.csv"):
-   
-    try:
-        df = pd.read_csv(path)
-    except FileNotFoundError:
-        raise FileNotFoundError(f"Dataset not found at path: {path}")
-
-   
-    df.columns = df.columns.str.strip().str.lower().str.replace(' ', '_').str.replace('-', '_')
-
-    # Rename key columns for easier access
-    rename_map = {
-        'screen_time_hours': 'ScreenTime',
-        'mental_wellness_index_0_100': 'MentalWellness',
-        'sleep_hours': 'SleepHours',
-        'gender': 'Gender',
-        'age': 'Age'
-    }
-    df.rename(columns={k: v for k, v in rename_map.items() if k in df.columns}, inplace=True)
-
-   
-    df.dropna(subset=['ScreenTime', 'MentalWellness'], inplace=True)
-
-    
-    for col in ['ScreenTime', 'MentalWellness', 'SleepHours', 'Age']:
-        if col in df.columns:
-            df[col] = pd.to_numeric(df[col], errors='coerce')
-
+    df = pd.read_csv(path)
     return df
 
+# Function to filter dataset
+def filter_data(df, genders=None, age_range=(0, 100), screen_time_range=(0, 24)):
+    filtered_df = df.copy()
 
-def filter_data(df, gender=None, age_range=None, screen_range=None):
+    # Apply filters
+    if genders:
+        filtered_df = filtered_df[filtered_df["Gender"].isin(genders)]
 
-    dff = df.copy()
+    if "Age" in df.columns:
+        filtered_df = filtered_df[
+            (filtered_df["Age"] >= age_range[0]) & (filtered_df["Age"] <= age_range[1])
+        ]
 
-    if gender and 'Gender' in dff.columns:
-        dff = dff[dff['Gender'].isin(gender)]
+    if "Screen Time (hours)" in df.columns:
+        filtered_df = filtered_df[
+            (filtered_df["Screen Time (hours)"] >= screen_time_range[0]) &
+            (filtered_df["Screen Time (hours)"] <= screen_time_range[1])
+        ]
 
-    if age_range and 'Age' in dff.columns:
-        dff = dff[(dff['Age'] >= age_range[0]) & (dff['Age'] <= age_range[1])]
+    return filtered_df
 
-    if screen_range and 'ScreenTime' in dff.columns:
-        dff = dff[(dff['ScreenTime'] >= screen_range[0]) & (dff['ScreenTime'] <= screen_range[1])]
-
-    return dff
+# Function to compute key insights
+def get_summary_stats(df):
+    return {
+        "Avg Screen Time": round(df["Screen Time (hours)"].mean(), 2),
+        "Avg Mental Wellness Score": round(df["Mental Wellness Score"].mean(), 2),
+        "Avg Sleep Hours": round(df["Sleep Hours"].mean(), 2),
+    }
